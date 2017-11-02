@@ -17,10 +17,13 @@ register_activation_hook( __FILE__, plugin_activation);
 register_deactivation_hook( __FILE__, plugin_deactivation);
 add_action('parse_request', 'create_order_handler');
 add_action('parse_request', 'new_order_handler');
+add_action( 'wp_ajax_autocomplete_action', 'autocomplete_action' );
+add_action( 'wp_ajax_nopriv_autocomplete_action', 'autocomplete_action' );
+
+add_action( 'admin_menu', 'orders_create_menu' );
 
 add_action('parse_request', 'delete_pdf_order_handler');
 add_action('parse_request', 'delete_html_order_handler');
-add_action( 'admin_menu', 'orders_create_menu' );
 
 /**
  * This function create all required database tables.
@@ -43,7 +46,7 @@ function plugin_activation() {
                 id int(11) NOT NULL,
                 name varchar(255) DEFAULT NULL,
                 home_phone varchar(55) DEFAULT NULL,
-                work_phone int(55) DEFAULT NULL,
+                work_phone varchar(55) DEFAULT NULL,
                 job_location varchar(255) DEFAULT NULL,
                 PRIMARY KEY (id)
             ) $charset_collate";
@@ -79,33 +82,107 @@ function plugin_deactivation() {
 function create_order_handler() {
     global $wpdb;
 
-    $table_name = $wpdb->prefix . 'orders';
+    $table_orders = $wpdb->prefix . 'orders';
 
     if($_SERVER['REQUEST_METHOD'] == 'POST' && $_SERVER["REQUEST_URI"] == '/order/create') {
-
         if(is_isset_and_not_empty($_POST['preview'])){
             generate_pdf(true);
-            die();
+            wp_die();
         }
 
         if(validate_form()){
             $wpdb->insert(
-                $table_name,
+                $table_orders,
                 array(
                     'detail' => json_encode($_POST)
                 )
             );
 
+            create_or_update_contact($_POST);
             generate_pdf();
             sendmail();
+
             include "templates/thanks.php";
-            exit();
+            wp_die();
         }
 
         include "templates/new.php";
-        exit();
+        wp_die();
     }
 }
+
+/**
+ *
+ */
+
+/**
+ * @param $params
+ * @return bool
+ */
+function validate_post_parameter($params){
+    $result = false;
+    foreach ($params as $param){
+        if($param){
+            $result = true;
+        }
+    }
+
+    return $result;
+}
+
+function create_or_update_contact($element){
+    global $wpdb;
+    $table_contacts = $wpdb->prefix . 'contacts';
+
+    if(!validate_post_parameter($element['order'])){
+        return false;
+    }
+
+    $result = $wpdb->get_var($wpdb->prepare("SELECT id FROM {$table_contacts} 
+              WHERE name LIKE '%%{$element['order']['customer_name']}%%' OR home_phone = '{$element['order']['home_phone']}' OR work_phone = '{$element['order']['work_phone']}' LIMIT 1", null));
+
+    if(!$result){
+        $wpdb->insert(
+            $table_contacts,
+            array(
+                'name' => strtolower($element['order']['customer_name']),
+                'home_phone' => $element['order']['home_phone'],
+                'work_phone' => $element['order']['work_phone'],
+                'job_location' => strtolower($element['order']['job_location'])
+            )
+        );
+    } else {
+
+        $wpdb->update(
+            $table_contacts,
+            array(
+                'name' => strtolower($element['order']['customer_name']),
+                'home_phone' => $element['order']['home_phone'],
+                'work_phone' => $element['order']['work_phone'],
+                'job_location' => strtolower($element['order']['job_location'])
+            ),
+            array('id' => $result)
+        );
+    }
+}
+
+
+function autocomplete_action(){
+    global $wpdb;
+
+    $table_contacts = $wpdb->prefix . 'contacts';
+    $q = esc_sql($_POST['query']);
+
+    $items = $wpdb->get_results($wpdb->prepare("SELECT * FROM {$table_contacts} WHERE LOWER(name) LIKE LOWER('%%{$q}%%') OR home_phone LIKE '%%{$q}%%' OR work_phone LIKE '%%{$q}%%'", null), ARRAY_A);
+
+    if(!$items){
+        wp_send_json(array(0 => "No results."));
+    }
+
+    wp_send_json($items);
+    wp_die();
+}
+
 
 /**
  * This action is called whenever the form is saved.
@@ -113,7 +190,6 @@ function create_order_handler() {
  */
 function new_order_handler() {
     if($_SERVER["REQUEST_URI"] == '/order/new') {
-
         $next  = "00" . (get_next_id() + 1);
         include "templates/new.php";
         exit();
@@ -324,7 +400,10 @@ function sendmail(){
     $headers = array(
         'From: Notifications <info@intser.com>;'
     );
-    wp_mail(["sbarbosa115@gmail.com", "info@jarocholandscaping.com"], "Order Created", "Someone has created a new order.", $headers, ORDERS_PLUGIN_DIR  . 'temp/order.pdf');
+
+    if(get_option( 'order_default_email' )){
+        wp_mail(array(get_option( 'order_default_email')), "Order Created", "Someone has created a new order.", $headers, ORDERS_PLUGIN_DIR  . 'temp/order.pdf');
+    }
 }
 
 /**
@@ -332,6 +411,8 @@ function sendmail(){
  */
 function orders_create_menu() {
     add_options_page( 'Orders', 'Create Order', 'manage_options', 'create-new-order', 'orders_options' );
+    register_setting( 'orders-settings', 'order_default_email' );
+    register_setting( 'orders-settings', 'order_signature_space' );
 }
 
 /**
@@ -341,7 +422,10 @@ function orders_options() {
     if ( !current_user_can( 'manage_options' ) )  {
         wp_die( __( 'You do not have sufficient permissions to access this page.' ) );
     }
-    echo '<div class="wrap">';
-    echo '<p><a href="/order/new" target="_blank">Click in here to create a new order</a></p>';
-    echo '</div>';
+
+    include 'templates/configuration.php';
 }
+
+
+
+

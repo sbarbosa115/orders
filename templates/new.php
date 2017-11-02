@@ -7,6 +7,7 @@
     <link rel="shortcut icon" href="images/favicon.ico">
     <link href="<?php echo ORDERS_PLUGIN_ASSETS_PUBLIC ?>/css/bootstrap.min.css" rel="stylesheet">
     <link href="<?php echo ORDERS_PLUGIN_ASSETS_PUBLIC ?>/css/bootstrap-datepicker.css" rel="stylesheet">
+    <link href="<?php echo ORDERS_PLUGIN_ASSETS_PUBLIC ?>/js/Autocomplete/jquery.auto-complete.css" rel="stylesheet">
     <link rel="stylesheet" href="<?php echo ORDERS_PLUGIN_ASSETS_PUBLIC ?>/css/app.css">
     <style>
         .container {
@@ -486,7 +487,26 @@
 
                             <div class="form-group col-md-12 no-padding">
                                 <label>Tax</label>
-                                <input type="number" class="form-control" name="order[tax]" value="<?php if(isset($_POST['order']['tax'])) echo $_POST['order']['tax'] ?>" placeholder="Tax" required>
+
+                                <select name="order[tax]" class="form-control">
+                                    <option value="invoice" value="0" selected>0 %</option>
+                                    <option value="invoice" value="1" selected>1 %</option>
+                                    <option value="invoice" value="2" selected>2 %</option>
+                                    <option value="invoice" value="3" selected>3 %</option>
+                                    <option value="invoice" value="4" selected>4 %</option>
+                                    <option value="invoice" value="5" selected>5 %</option>
+                                    <option value="invoice" value="6" selected>6 %</option>
+                                    <option value="invoice" value="7" selected>7 %</option>
+                                    <option value="invoice" value="8" selected>8 %</option>
+                                    <option value="invoice" value="9" selected>9 %</option>
+                                    <option value="invoice" value="10" selected>10 %</option>
+                                    <option value="invoice" value="11" selected>11 %</option>
+                                    <option value="invoice" value="12" selected>12 %</option>
+                                    <option value="invoice" value="13" selected>13 %</option>
+                                    <option value="invoice" value="14" selected>14 %</option>
+                                    <option value="invoice" value="15" selected>15 %</option>
+                                </select>
+
                                 <input type="hidden" class="form-control" name="order[signature]" value="<?php if(isset($_POST['order']['signature'])) echo $_POST['order']['signature'] ?>">
                                 <input type="hidden" class="form-control" name="preview" value="">
                             </div>
@@ -521,6 +541,7 @@
 <script src="<?php echo ORDERS_PLUGIN_ASSETS_PUBLIC ?>/js/bootstrap.min.js"></script>
 <script src="<?php echo ORDERS_PLUGIN_ASSETS_PUBLIC ?>/js/bootstrap-datepicker.min.js"></script>
 <script src="<?php echo ORDERS_PLUGIN_ASSETS_PUBLIC ?>/js/jSignature.min.js"></script>
+<script src="<?php echo ORDERS_PLUGIN_ASSETS_PUBLIC ?>/js/Autocomplete/jquery.auto-complete.min.js"></script>
 <script>
     $('.datepicker').datepicker({
         format: 'yyyy-mm-dd'
@@ -538,12 +559,37 @@
     })
 
     $("#submit-and-save").click(function(e){
+        $("#order-form").removeAttr('target');
         $( "input[name='preview']" ).val("");
     })
 
     $("#submit-and-preview").click(function(e){
+        $("#order-form").attr('target','_blank');
         $( "input[name='preview']" ).val("ok");
     })
+
+    $("input[name='order[customer_name]']").autoComplete({
+        source: function(query, response){
+            $.ajax({
+                type: 'post',
+                url: '<?php echo admin_url('admin-ajax.php', null); ?>',
+                data: 'action=autocomplete_action&query='+query,
+                dataType: 'json',
+                success: function(data) {
+                    response(data);
+                },
+            });
+        },
+        renderItem: function (item, search){
+            return '<div class="autocomplete-suggestion" data-val="' + item.name + '" data-object=\''+ JSON.stringify(item) +'\'>' + item.name + '</div>';
+        },
+        onSelect: function(e, term, item){
+            var object = $(item).data("object")
+            $("input[name='order[home_phone]']").val(object.home_phone);
+            $("input[name='order[work_phone]']").val(object.work_phone);
+            $("input[name='order[job_location]']").val(object.job_location);
+        }
+    });
 </script>
 </body>
 </html>
