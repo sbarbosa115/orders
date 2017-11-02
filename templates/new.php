@@ -40,7 +40,12 @@
         <div class="row">
             <form method="post" action="<?php echo get_site_url(); ?>/order/create" id="order-form" target="_blank">
                 <div class="col-md-12">
+
                     <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Customer Name</label>
+                            <input type="text" class="form-control" value="<?php if(isset($_POST['order']['customer_name'])) echo $_POST['order']['customer_name'] ?>" name="order[customer_name]" >
+                        </div>
                         <div class="form-group">
                             <label>Date Order</label>
                             <input type="text" class="form-control date-order" value="<?php if(isset($_POST['order']['date_of_order'])) { echo $_POST['order']['date_of_order']; } else { echo date("Y-m-d"); } ?>" name="order[date_of_order]"  required>
@@ -67,6 +72,22 @@
                         </div>
                     </div>
                     <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Type</label>
+                            <select name="order[type]" class="form-control">
+                                <?php if(isset($_POST['order']['type']) && $_POST['order']['type'] === 'invoice'): ?>
+                                    <option value="invoice" selected>Invoice</option>
+                                <?php else: ?>
+                                    <option value="invoice">Invoice</option>
+                                <?php endif ?>
+
+                                <?php if(isset($_POST['order']['type']) && $_POST['order']['type'] === 'estimate'): ?>
+                                    <option value="estimate" selected>Estimate</option>
+                                <?php else: ?>
+                                    <option value="estimate">Estimate</option>
+                                <?php endif ?>
+                            </select>
+                        </div>
                         <div class="form-group">
                             <input type="text" class="form-control"  name="order[home_phone]" value="<?php if(isset($_POST['order']['home_phone'])) echo $_POST['order']['home_phone'] ?>" placeholder="Home Phone">
                         </div>
@@ -150,47 +171,117 @@
                     <div class="col-md-6">
                         <h3>Fertilization / Weed Control Program</h3>
 
-                        <h4>Turf Fertilization</h4>
-                        <div class="form-group">
-                            <input type="text" class="form-control" name="fertilization[turf][spring]" value="<?php if(isset($_POST['fertilization']['turf']['spring'])) echo $_POST['fertilization']['turf']['spring'] ?>" placeholder="Spring">
+                        <div class="col-md-12" style="padding: 0;">
+                            <div class="form-group col-md-4 no-padding">
+                                <input type="text" class="form-control" name="fertilization[0][description]" value="<?php if(isset($_POST['fertilization'][0]['description'])) echo $_POST['fertilization'][0]['description'] ?>" placeholder="Description">
+                            </div>
+                            <div class="form-group col-md-4 no-padding">
+                                <input type="text" class="form-control" name="fertilization[0][material]" value="<?php if(isset($_POST['fertilization'][0]['material'])) echo $_POST['fertilization'][0]['material'] ?>" placeholder="Material">
+                            </div>
+                            <div class="form-group col-md-2 no-padding">
+                                <input type="text" class="form-control" name="fertilization[0][labor]" value="<?php if(isset($_POST['fertilization'][0]['labor'])) echo $_POST['fertilization'][0]['labor'] ?>" placeholder="Labor">
+                            </div>
+                            <div class="form-group col-md-2 no-padding">
+                                <input type="text" class="form-control" name="fertilization[0][project_amount]" value="<?php if(isset($_POST['fertilization'][0]['amount'])) echo $_POST['fertilization'][0]['project_amount'] ?>" placeholder="Amount">
+                            </div>
                         </div>
-
-                        <div class="form-group">
-                            <input type="text" class="form-control" name="fertilization[turf][spring_grass]" value="<?php if(isset($_POST['fertilization']['turf']['spring_grass'])) echo $_POST['fertilization']['turf']['spring_grass'] ?>" placeholder="Spring With Grass">
+                        <div class="col-md-12" style="padding: 0;">
+                            <div class="form-group col-md-4 no-padding">
+                                <input type="text" class="form-control" name="fertilization[1][description]" value="<?php if(isset($_POST['fertilization'][1]['description'])) echo $_POST['fertilization'][1]['description'] ?>" placeholder="Description">
+                            </div>
+                            <div class="form-group col-md-4 no-padding">
+                                <input type="text" class="form-control" name="fertilization[1][material]" value="<?php if(isset($_POST['fertilization'][1]['material'])) echo $_POST['fertilization'][1]['material'] ?>" placeholder="Material">
+                            </div>
+                            <div class="form-group col-md-2 no-padding">
+                                <input type="text" class="form-control" name="fertilization[1][labor]" value="<?php if(isset($_POST['fertilization'][1]['labor'])) echo $_POST['fertilization'][1]['labor'] ?>" placeholder="Labor">
+                            </div>
+                            <div class="form-group col-md-2 no-padding">
+                                <input type="text" class="form-control" name="fertilization[1][project_amount]" value="<?php if(isset($_POST['fertilization'][1]['amount'])) echo $_POST['fertilization'][1]['project_amount'] ?>" placeholder="Amount">
+                            </div>
                         </div>
-
-                        <div class="form-group">
-                            <input type="text" class="form-control" name="fertilization[turf][early_summer]" value="<?php if(isset($_POST['fertilization']['turf']['early_summer'])) echo $_POST['fertilization']['turf']['early_summer'] ?>" placeholder="Early Summer">
+                        <div class="col-md-12" style="padding: 0;">
+                            <div class="form-group col-md-4 no-padding">
+                                <input type="text" class="form-control" name="fertilization[2][description]" value="<?php if(isset($_POST['fertilization'][2]['description'])) echo $_POST['fertilization'][2]['description'] ?>" placeholder="Description">
+                            </div>
+                            <div class="form-group col-md-4 no-padding">
+                                <input type="text" class="form-control" name="fertilization[2][material]" value="<?php if(isset($_POST['fertilization'][2]['material'])) echo $_POST['fertilization'][2]['material'] ?>" placeholder="Material">
+                            </div>
+                            <div class="form-group col-md-2 no-padding">
+                                <input type="text" class="form-control" name="fertilization[2][labor]" value="<?php if(isset($_POST['fertilization'][2]['labor'])) echo $_POST['fertilization'][2]['labor'] ?>" placeholder="Labor">
+                            </div>
+                            <div class="form-group col-md-2 no-padding">
+                                <input type="text" class="form-control" name="fertilization[2][project_amount]" value="<?php if(isset($_POST['fertilization'][2]['amount'])) echo $_POST['fertilization'][2]['project_amount'] ?>" placeholder="Amount">
+                            </div>
                         </div>
-
-                        <div class="form-group">
-                            <input type="text" class="form-control" name="fertilization[turf][late_summer]" value="<?php if(isset($_POST['fertilization']['turf']['late_summer'])) echo $_POST['fertilization']['turf']['late_summer'] ?>" placeholder="Late Summer">
+                        <div class="col-md-12" style="padding: 0;">
+                            <div class="form-group col-md-4 no-padding">
+                                <input type="text" class="form-control" name="fertilization[3][description]" value="<?php if(isset($_POST['fertilization'][3]['description'])) echo $_POST['fertilization'][3]['description'] ?>" placeholder="Description">
+                            </div>
+                            <div class="form-group col-md-4 no-padding">
+                                <input type="text" class="form-control" name="fertilization[3][material]" value="<?php if(isset($_POST['fertilization'][3]['material'])) echo $_POST['fertilization'][3]['material'] ?>" placeholder="Material">
+                            </div>
+                            <div class="form-group col-md-2 no-padding">
+                                <input type="text" class="form-control" name="fertilization[3][labor]" value="<?php if(isset($_POST['fertilization'][3]['labor'])) echo $_POST['fertilization'][3]['labor'] ?>" placeholder="Labor">
+                            </div>
+                            <div class="form-group col-md-2 no-padding">
+                                <input type="text" class="form-control" name="fertilization[3][project_amount]" value="<?php if(isset($_POST['fertilization'][3]['amount'])) echo $_POST['fertilization'][3]['project_amount'] ?>" placeholder="Amount">
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <input type="text" class="form-control" name="fertilization[turf][fall_winterizer]" value="<?php if(isset($_POST['fertilization']['turf']['fall_winterizer'])) echo $_POST['fertilization']['turf']['fall_winterizer'] ?>" placeholder="Fall Winterizer">
+                        <div class="col-md-12" style="padding: 0;">
+                            <div class="form-group col-md-4 no-padding">
+                                <input type="text" class="form-control" name="fertilization[4][description]" value="<?php if(isset($_POST['fertilization'][4]['description'])) echo $_POST['fertilization'][4]['description'] ?>" placeholder="Description">
+                            </div>
+                            <div class="form-group col-md-4 no-padding">
+                                <input type="text" class="form-control" name="fertilization[4][material]" value="<?php if(isset($_POST['fertilization'][4]['material'])) echo $_POST['fertilization'][4]['material'] ?>" placeholder="Material">
+                            </div>
+                            <div class="form-group col-md-2 no-padding">
+                                <input type="text" class="form-control" name="fertilization[4][labor]" value="<?php if(isset($_POST['fertilization'][4]['labor'])) echo $_POST['fertilization'][4]['labor'] ?>" placeholder="Labor">
+                            </div>
+                            <div class="form-group col-md-2 no-padding">
+                                <input type="text" class="form-control" name="fertilization[4][project_amount]" value="<?php if(isset($_POST['fertilization'][4]['amount'])) echo $_POST['fertilization'][4]['project_amount'] ?>" placeholder="Amount">
+                            </div>
                         </div>
-
-                        <h4>Organic Fertilization</h4>
-                        <div class="form-group">
-                            <input type="text" class="form-control" name="fertilization[organic][early_summer]" value="<?php if(isset($_POST['fertilization']['organic']['early_summer'])) echo $_POST['fertilization']['organic']['early_summer'] ?>" placeholder="Early Summer">
+                        <div class="col-md-12" style="padding: 0;">
+                            <div class="form-group col-md-4 no-padding">
+                                <input type="text" class="form-control" name="fertilization[5][description]" value="<?php if(isset($_POST['fertilization'][5]['description'])) echo $_POST['fertilization'][5]['description'] ?>" placeholder="Description">
+                            </div>
+                            <div class="form-group col-md-4 no-padding">
+                                <input type="text" class="form-control" name="fertilization[5][material]" value="<?php if(isset($_POST['fertilization'][5]['material'])) echo $_POST['fertilization'][5]['material'] ?>" placeholder="Material">
+                            </div>
+                            <div class="form-group col-md-2 no-padding">
+                                <input type="text" class="form-control" name="fertilization[5][labor]" value="<?php if(isset($_POST['fertilization'][5]['labor'])) echo $_POST['fertilization'][5]['labor'] ?>" placeholder="Labor">
+                            </div>
+                            <div class="form-group col-md-2 no-padding">
+                                <input type="text" class="form-control" name="fertilization[5][project_amount]" value="<?php if(isset($_POST['fertilization'][5]['amount'])) echo $_POST['fertilization'][5]['project_amount'] ?>" placeholder="Amount">
+                            </div>
                         </div>
-
-                        <div class="form-group">
-                            <input type="text" class="form-control" name="fertilization[organic][late_summer]" value="<?php if(isset($_POST['fertilization']['organic']['late_summer'])) echo $_POST['fertilization']['organic']['late_summer'] ?>" placeholder="Late Summer">
+                        <div class="col-md-12" style="padding: 0;">
+                            <div class="form-group col-md-4 no-padding">
+                                <input type="text" class="form-control" name="fertilization[6][description]" value="<?php if(isset($_POST['fertilization'][6]['description'])) echo $_POST['fertilization'][6]['description'] ?>" placeholder="Description">
+                            </div>
+                            <div class="form-group col-md-4 no-padding">
+                                <input type="text" class="form-control" name="fertilization[6][material]" value="<?php if(isset($_POST['fertilization'][6]['material'])) echo $_POST['fertilization'][6]['material'] ?>" placeholder="Material">
+                            </div>
+                            <div class="form-group col-md-2 no-padding">
+                                <input type="text" class="form-control" name="fertilization[6][labor]" value="<?php if(isset($_POST['fertilization'][6]['labor'])) echo $_POST['fertilization'][6]['labor'] ?>" placeholder="Labor">
+                            </div>
+                            <div class="form-group col-md-2 no-padding">
+                                <input type="text" class="form-control" name="fertilization[6][project_amount]" value="<?php if(isset($_POST['fertilization'][6]['amount'])) echo $_POST['fertilization'][6]['project_amount'] ?>" placeholder="Amount">
+                            </div>
                         </div>
-
-                        <div class="form-group">
-                            <input type="text" class="form-control" name="fertilization[organic][fall_winterizer]" value="<?php if(isset($_POST['fertilization']['organic']['fall_winterizer'])) echo $_POST['fertilization']['organic']['fall_winterizer'] ?>" placeholder="Fall Winterizer">
-                        </div>
-
-
-                        <h4>Organic Fertilization</h4>
-                        <div class="form-group">
-                            <input type="text" class="form-control" name="fertilization[broadleaf_weed][late_spring]" value="<?php if(isset($_POST['fertilization']['broadleaf_weed']['late_spring'])) echo $_POST['fertilization']['broadleaf_weed']['late_spring'] ?>" placeholder="Late Spring">
-                        </div>
-
-                        <div class="form-group">
-                            <input type="text" class="form-control" name="fertilization[broadleaf_weed][late_summer]" value="<?php if(isset($_POST['fertilization']['broadleaf_weed']['late_summer'])) echo $_POST['fertilization']['broadleaf_weed']['late_summer'] ?>" placeholder="Late Summer">
+                        <div class="col-md-12" style="padding: 0;">
+                            <div class="form-group col-md-4 no-padding">
+                                <input type="text" class="form-control" name="fertilization[7][description]" value="<?php if(isset($_POST['fertilization'][7]['description'])) echo $_POST['fertilization'][7]['description'] ?>" placeholder="Description">
+                            </div>
+                            <div class="form-group col-md-4 no-padding">
+                                <input type="text" class="form-control" name="fertilization[7][material]" value="<?php if(isset($_POST['fertilization'][7]['material'])) echo $_POST['fertilization'][7]['material'] ?>" placeholder="Material">
+                            </div>
+                            <div class="form-group col-md-2 no-padding">
+                                <input type="text" class="form-control" name="fertilization[7][labor]" value="<?php if(isset($_POST['fertilization'][7]['labor'])) echo $_POST['fertilization'][7]['labor'] ?>" placeholder="Labor">
+                            </div>
+                            <div class="form-group col-md-2 no-padding">
+                                <input type="text" class="form-control" name="fertilization[7][project_amount]" value="<?php if(isset($_POST['fertilization'][7]['amount'])) echo $_POST['fertilization'][7]['project_amount'] ?>" placeholder="Amount">
+                            </div>
                         </div>
 
                     </div>
@@ -232,11 +323,11 @@
 
 
                         <div class="form-group">
-                            <input type="text" class="form-control datepicker" name="fall_clean[date_from]" placeholder="Start Date" value="<?php if(isset($_POST['fall_clean']['date_from'])) echo $_POST['fall_clean']['date_from'] ?>">
+                            <input type="text" class="form-control datepicker" name="fall_clean[start_date]" placeholder="Start Date" value="<?php if(isset($_POST['fall_clean']['start_date'])) echo $_POST['fall_clean']['start_date'] ?>">
                         </div>
 
                         <div class="form-group">
-                            <input type="text" class="form-control datepicker" name="fall_clean[date_from]" placeholder="End Date" value="<?php if(isset($_POST['fall_clean']['date_from'])) echo $_POST['fall_clean']['date_from'] ?>">
+                            <input type="text" class="form-control datepicker" name="fall_clean[end_date]" placeholder="End Date" value="<?php if(isset($_POST['fall_clean']['end_date'])) echo $_POST['fall_clean']['end_date'] ?>">
                         </div>
 
                     </div>

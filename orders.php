@@ -30,17 +30,27 @@ function plugin_activation() {
     global $wpdb;
 
     $charset_collate = $wpdb->get_charset_collate();
-    $table_name = $wpdb->prefix . 'orders';
+    $table_orders = $wpdb->prefix . 'orders';
 
-    $sql = "CREATE TABLE {$table_name} (
-              id int(10) NOT NULL AUTO_INCREMENT,
-              detail text COLLATE utf8mb4_unicode_ci,
-              PRIMARY KEY (`id`)
+    $sql = "CREATE TABLE {$table_orders} (
+                id int(10) NOT NULL AUTO_INCREMENT,
+                detail text COLLATE utf8mb4_unicode_ci,
+                PRIMARY KEY (`id`)
             ) $charset_collate";
 
+    $table_contacts = $wpdb->prefix . 'contacts';
+    $sqlB = "CREATE TABLE {$table_contacts} (                           
+                id int(11) NOT NULL,
+                name varchar(255) DEFAULT NULL,
+                home_phone varchar(55) DEFAULT NULL,
+                work_phone int(55) DEFAULT NULL,
+                job_location varchar(255) DEFAULT NULL,
+                PRIMARY KEY (id)
+            ) $charset_collate";
 
     require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
     dbDelta( $sql );
+    dbDelta( $sqlB);
 }
 
 /**
@@ -50,12 +60,15 @@ function plugin_activation() {
 function plugin_deactivation() {
     global $wpdb;
 
-    $table_name = $wpdb->prefix . 'orders';
+    $table_orders = $wpdb->prefix . 'orders';
+    $sql = "DROP TABLE {$table_orders}";
 
-    $sql = "DROP TABLE {$table_name}";
+    $table_contacts = $wpdb->prefix . 'contacts';
+    $sqlB = "DROP TABLE {$table_contacts}";
 
     require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
     dbDelta( $sql );
+    dbDelta( $sqlB );
 }
 
 
@@ -287,7 +300,7 @@ function get_next_id(){
  */
 function delete_pdf_order_handler() {
     if($_SERVER["REQUEST_URI"] == '/order/pdf') {
-        generate_pdf();
+        generate_pdf(true);
         exit();
     }
 }
