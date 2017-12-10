@@ -43,7 +43,7 @@ function plugin_activation() {
 
     $table_contacts = $wpdb->prefix . 'contacts';
     $sqlB = "CREATE TABLE {$table_contacts} (                           
-                id int(11) NOT NULL,
+                id int(11) NOT NULL AUTO_INCREMENT,
                 name varchar(255) DEFAULT NULL,
                 home_phone varchar(55) DEFAULT NULL,
                 work_phone varchar(55) DEFAULT NULL,
@@ -64,14 +64,11 @@ function plugin_deactivation() {
     global $wpdb;
 
     $table_orders = $wpdb->prefix . 'orders';
-    $sql = "DROP TABLE {$table_orders}";
-
     $table_contacts = $wpdb->prefix . 'contacts';
-    $sqlB = "DROP TABLE {$table_contacts}";
+    $sql = "DROP TABLE {$table_orders}; DROP TABLE {$table_contacts}";
 
     require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
     dbDelta( $sql );
-    dbDelta( $sqlB );
 }
 
 
@@ -87,7 +84,7 @@ function create_order_handler() {
     if($_SERVER['REQUEST_METHOD'] == 'POST' && $_SERVER["REQUEST_URI"] == '/order/create') {
         if(is_isset_and_not_empty($_POST['preview'])){
             generate_pdf(true);
-            wp_die();
+            die();        
         }
 
         if(validate_form()){
@@ -103,21 +100,19 @@ function create_order_handler() {
             sendmail();
 
             include "templates/thanks.php";
-            wp_die();
+            die();
         }
 
         include "templates/new.php";
-        wp_die();
+        die();
     }
 }
 
 /**
- *
- */
-
-/**
- * @param $params
- * @return bool
+ * To validate the post parameter before store in database.
+ * @param $params Array request to evaluate.
+ * @return bool Return true if the given array has a elements in it otherwise false.
+ * @author Sergio Barbosa <sbarbosa115@gmail.com>
  */
 function validate_post_parameter($params){
     $result = false;
@@ -130,6 +125,12 @@ function validate_post_parameter($params){
     return $result;
 }
 
+/**
+ * Validate if the contact sent was create in database.
+ * @param $element Array with the contact to create or update.
+ * @return bool False if the contact data is empty.
+ * @author Sergio Barbosa <sbarbosa115@gmail.com>
+ */
 function create_or_update_contact($element){
     global $wpdb;
     $table_contacts = $wpdb->prefix . 'contacts';
@@ -166,7 +167,10 @@ function create_or_update_contact($element){
     }
 }
 
-
+/**
+ * This is the service that fill the information whenever the user uses the auto-complete function.
+ * @author Sergio Barbosa <sbarbosa115@gmail.com>
+ */
 function autocomplete_action(){
     global $wpdb;
 
@@ -245,11 +249,22 @@ function generate_pdf($download = false){
     $pdf->SetFont('times', null, 9);
     $pdf->AddPage();
 
-    $total = sum_fields_ignore($_POST, array('labor', 'amount', 'deposit', 'tax', 'home_phone', 'work_phone', 'project_amount'));
-    $labor = sum_fields_not_ignore($_POST, array('project_amount'));
-    $tax = isset($_POST['order']['tax']) ? $_POST['order']['tax'] : 0;
-    $deposit = isset($_POST['order']['deposit']) ? $_POST['order']['deposit'] : 0;
-    $totals = calculate_totals($total, $labor, $tax, $deposit);
+    $maintenance = sum_by_key($_POST['maintenance']);
+    $springClean = sum_by_key($_POST['spring_clean']);
+    $fallClean = sum_by_key($_POST['fall_clean']);
+    $bedCare = sum_by_key($_POST['bed_care']);
+    $gutterCleaning = sum_by_key($_POST['gutter_cleaning']);
+    $removalInstallation = sum_by_key($_POST['removal_installation']);
+    $totalMaterialComplex = calculate_material($_POST['fertilization']) + calculate_material($_POST['other_projects']);
+    $totalMaterial = $totalMaterialComplex;
+    $totalLabor = calculate_labor($_POST['fertilization']) + calculate_labor($_POST['other_projects']) + $maintenance + $springClean + $fallClean + $bedCare + $gutterCleaning + $removalInstallation;
+    $totalGeneral = $totalMaterial + $totalLabor;
+
+    $tax = isset($_POST['order']['tax']) ? ($totalGeneral * $_POST['order']['tax'])/100 : 0;
+    $totalGeneralNoTax = $totalGeneral - $tax;
+
+    $deposit = isset($_POST['order']['deposit']) ? ($totalGeneralNoTax * $_POST['order']['deposit']) / 100 : 0;
+    $balanceDue = $totalGeneralNoTax - $deposit;
 
     $next  = get_next_id() + 1;
 
@@ -265,32 +280,6 @@ function generate_pdf($download = false){
     } else {
         $pdf->Output(ORDERS_PLUGIN_DIR  . 'temp/order.pdf', "F");
     }
-}
-
-/**
- * Calculate all final variables before sent them to PDF function.
- * @param $totalMaterials Amount total of materials.
- * @param $totalLabor Amount total of labor activities.
- * @param $totalTax Taxes sent them by user.
- * @param $deposit Deposit made for customer.
- * @return array All calculation in array format.
- * @author Sergio Barbosa <sbarbosa115@gmail.com>
- */
-function calculate_totals($totalMaterials, $totalLabor, $totalTax, $deposit){
-    $material = is_numeric($totalMaterials) ? $totalMaterials : 0;
-    $labor  = is_numeric($totalLabor) ? $totalLabor : 0;
-    $tax = isset($totalTax) && is_numeric($totalTax) ? $totalTax : 0;
-
-    $base = ($material + $labor);
-    if($tax){
-        $taxes = (($tax * $base) / 100 );
-        $total = ($base - $taxes) - $deposit;
-    } else {
-        $taxes = 0;
-        $total = ($base - $tax) - $deposit;
-    }
-
-    return array('totalMaterial' => $totalMaterials, 'totalLabor' => $totalLabor, 'total' => $total, 'deposit' => $deposit, 'taxes' => $taxes);
 }
 
 /**
@@ -313,22 +302,36 @@ function generate_image_from_signature($signature){
 }
 
 /**
- * Sum each value element and ignore the forbidden array element.
- * @param $elements Array to sum.
- * @param $forbidden Array to ignore elements.
- * @return int|string
- * @author Sergio Barbosa <sbarbosa115@gmail.com>
+ * Sum sub element of key value kind.
+ * @param $items array with elements to sum.
+ * @return int Amount.
  */
-function sum_fields_ignore($elements, $forbidden){
+function sum_by_key($items){
     $result = 0;
-    foreach ($elements as $key => $element){
-        if(is_array($element)){
-            $result += sum_fields_ignore($element, $forbidden);
-        }
 
-        if(is_numeric($element) && !in_array($key, $forbidden)){
-            $result += $element;
+    foreach ($items as $item){
+        if(is_numeric($item)){
+            $result += $item;
         }
+    }
+
+    return $result;
+}
+
+/**
+ * Sum the total of labor from given array and return the total.
+ * @param $items array with elements to sum.
+ * @return int Total.
+ */
+function calculate_material_labor($items){
+    $result = 0;
+
+    foreach ($items as $item){
+        $local = 0;
+        if(is_numeric($item['material']) && is_numeric($item['amount']) && is_numeric($item['labor'])){
+            $local = ($item['material'] + $item['amount'] ) * $item['labor'];
+        }
+        $result += $local;
     }
 
     return $result;
@@ -336,26 +339,45 @@ function sum_fields_ignore($elements, $forbidden){
 
 
 /**
- * Sum each value element if it's in available array.
- * @param $elements Array with elements to sum.
- * @param $allowed Array with element allowed to sum.
- * @return int|string
- * @author Sergio Barbosa <sbarbosa115@gmail.com>
+ * Sum the total for all element with key labor and multiply it for amount and return the result.
+ * @param $items array with elements to sum.
+ * @return int Total.
  */
-function sum_fields_not_ignore($elements, $allowed){
+function calculate_labor($items){
     $result = 0;
-    foreach ($elements as $key => $element){
-        if(is_array($element)){
-            $result += sum_fields_not_ignore($element, $allowed);
-        }
 
-        if(is_numeric($element) && in_array($key, $allowed)){
-            $result += $element;
+    foreach ($items as $item){
+        $local = 0;
+        if(is_numeric($item['amount']) && is_numeric($item['material'])){
+            $local = $item['amount'] * $item['labor'];
         }
+        $result += $local;
     }
 
     return $result;
 }
+
+
+/**
+ * Sum the total for all element with key material and multiply it for amount and return the result.
+ * @param $items array with elements to sum.
+ * @return int Total.
+ */
+function calculate_material($items){
+    $result = 0;
+
+    foreach ($items as $item){
+
+        $local = 0;
+        if(is_numeric($item['amount']) && is_numeric($item['material'])){
+            $local = $item['amount'] * $item['material'];
+        }
+        $result += $local;
+    }
+
+    return $result;
+}
+
 
 /**
  * Return the last ID order stored in the database.
@@ -365,7 +387,9 @@ function sum_fields_not_ignore($elements, $allowed){
 function get_next_id(){
     global $wpdb;
 
-    $result = $wpdb->get_var($wpdb->prepare("SELECT id FROM wp_orders WHERE 1  ORDER BY id DESC LIMIT 1", array()));
+    $table_orders = $wpdb->prefix . 'orders';
+
+    $result = $wpdb->get_var($wpdb->prepare("SELECT id FROM {$table_orders} WHERE 1  ORDER BY id DESC LIMIT 1", array()));
 
     return $result;
 }
@@ -397,12 +421,16 @@ function delete_html_order_handler() {
  * @author Sergio Barbosa <sbarbosa115@gmail.com>
  */
 function sendmail(){
-    $headers = array(
-        'From: Notifications <info@intser.com>;'
-    );
 
-    if(get_option( 'order_default_email' )){
-        wp_mail(array(get_option( 'order_default_email')), "Order Created", "Someone has created a new order.", $headers, ORDERS_PLUGIN_DIR  . 'temp/order.pdf');
+    if(get_option( 'order_from_email' )) {
+        $domain = get_option( 'order_from_email' );
+        $headers = array("From: Notifications <{$domain}>;");
+    } else {
+        $headers = array();
+    }
+
+    if(get_option( 'order_to_email' )){
+        wp_mail(array(get_option( 'order_to_email')), "Order Created", "Someone has created a new order.", $headers, array(ORDERS_PLUGIN_DIR  . 'temp/order.pdf'));
     }
 }
 
@@ -411,7 +439,8 @@ function sendmail(){
  */
 function orders_create_menu() {
     add_options_page( 'Orders', 'Create Order', 'manage_options', 'create-new-order', 'orders_options' );
-    register_setting( 'orders-settings', 'order_default_email' );
+    register_setting( 'orders-settings', 'order_from_email' );
+    register_setting( 'orders-settings', 'order_to_email' );
     register_setting( 'orders-settings', 'order_signature_space' );
 }
 
@@ -425,7 +454,3 @@ function orders_options() {
 
     include 'templates/configuration.php';
 }
-
-
-
-

@@ -21,28 +21,27 @@
         <td colspan="2" style="text-align: center">Lic. & Ins.</td>
     </tr>
     <tr>
-        <td colspan="2" style="text-align: center">jaroncholandscaping@hotmail.com</td>
+        <td colspan="2" style="text-align: center">info@jarocholandscaping.com</td>
     </tr>
 </table>
 
 <table cellspacing="0" cellpadding="1" border="0" style="font-size: 8px">
     <tr>
         <td colspan="2" rowspan="9">
-            <span style="font-weight: bold; font-size: 16px"><?php if(is_isset_and_not_empty($_POST['order']['type'])) echo $_POST['order']['tyoe'] ?></span>
+            <span style="font-weight: bold; font-size: 16px"><?php if(is_isset_and_not_empty($_POST['order']['type'])) echo strtoupper($_POST['order']['type']) ?></span>
         </td>
-        <td border="1">CUSTOMER NAME <span><?php if(is_isset_and_not_empty($_POST['order']['customer_name'])) echo $_POST['order']['customer_name'] ?></span></td>
-        <td border="1">TYPE <span><?php if(is_isset_and_not_empty($_POST['order']['type'])) echo $_POST['order']['type'] ?></span></td>
+        <td border="1" colspan="2">CUSTOMER NAME: <span><?php if(is_isset_and_not_empty($_POST['order']['customer_name'])) echo $_POST['order']['customer_name'] ?></span></td>
     </tr>
     <tr>
-        <td border="1">DATE OF ORDER <span><?php if(is_isset_and_not_empty($_POST['order']['date_of_order'])) echo $_POST['order']['date_of_order'] ?></span></td>
-        <td border="1">HOME PHONE No <span><?php if(is_isset_and_not_empty($_POST['order']['home_phone'])) echo $_POST['order']['home_phone'] ?></span></td>
+        <td border="1">DATE OF ORDER: <span><?php if(is_isset_and_not_empty($_POST['order']['date_of_order'])) echo $_POST['order']['date_of_order'] ?></span></td>
+        <td border="1">HOME PHONE No: <span><?php if(is_isset_and_not_empty($_POST['order']['home_phone'])) echo $_POST['order']['home_phone'] ?></span></td>
     </tr>
     <tr>
-        <td border="1">ORDER TAKEN BY <span><?php if(is_isset_and_not_empty($_POST['order']['taken_by'])) echo $_POST['order']['taken_by'] ?></span></td>
-        <td border="1">WORK PHONE No <span><?php if(is_isset_and_not_empty($_POST['order']['work_phone'])) echo $_POST['order']['work_phone'] ?></span></td>
+        <td border="1">BILL TO: <span><?php if(is_isset_and_not_empty($_POST['order']['taken_by'])) echo $_POST['order']['taken_by'] ?></span></td>
+        <td border="1">WORK PHONE No: <span><?php if(is_isset_and_not_empty($_POST['order']['work_phone'])) echo $_POST['order']['work_phone'] ?></span></td>
     </tr>
     <tr>
-        <td border="1">CUSTOMER ORDER No <span style="font-weight: bold">00<?php echo $next ?></span></td>
+        <td border="1">CUSTOMER ORDER No: <span style="font-weight: bold">00<?php echo $next ?></span></td>
         <td border="1" rowspan="2">
             <?php if(is_isset_and_not_empty($_POST['order']['kind']['one_time_job'])) echo "<span>[*] Seasonal Contract</span> " ?>
             <?php if(is_isset_and_not_empty($_POST['order']['kind']['repeat'])) echo "<span>[*] Repeat</span> " ?>
@@ -50,19 +49,19 @@
         </td>
     </tr>
     <tr>
-        <td border="1">APPOINTMENT START DATE <span><?php if(is_isset_and_not_empty($_POST['order']['appointment_start'])) echo $_POST['order']['appointment_start'] ?></span></td>
+        <td border="1">APPOINTMENT START DATE: <span><?php if(is_isset_and_not_empty($_POST['order']['appointment_start'])) echo $_POST['order']['appointment_start'] ?></span></td>
     </tr>
     <tr>
-        <td border="1">JOB NAME/NO <span><?php if(is_isset_and_not_empty($_POST['order']['job_name'])) echo $_POST['order']['job_name'] ?></span></td>
+        <td border="1">SHIP TO: <span><?php if(is_isset_and_not_empty($_POST['order']['job_name'])) echo $_POST['order']['job_name'] ?></span></td>
         <td border="1"></td>
     </tr>
     <tr>
-        <td border="1">JOB LOCATION <span><?php if(is_isset_and_not_empty($_POST['order']['job_location'])) echo $_POST['order']['job_location'] ?></span></td>
+        <td border="1">JOB LOCATION: <span><?php if(is_isset_and_not_empty($_POST['order']['job_location'])) echo $_POST['order']['job_location'] ?></span></td>
         <td border="1"></td>
     </tr>
     <tr>
-        <td border="1">INVOICE DATE <span><?php if(is_isset_and_not_empty($_POST['order']['invoice_date'])) echo $_POST['order']['invoice_date'] ?></span></td>
-        <td border="1">A. COMPLETION DATE <span><?php if(is_isset_and_not_empty($_POST['order']['appointment_end'])) echo $_POST['order']['appointment_end'] ?></span></td>
+        <td border="1">INVOICE DATE: <span><?php if(is_isset_and_not_empty($_POST['order']['invoice_date'])) echo $_POST['order']['invoice_date'] ?></span></td>
+        <td border="1">A. COMPLETION DATE: <span><?php if(is_isset_and_not_empty($_POST['order']['appointment_end'])) echo $_POST['order']['appointment_end'] ?></span></td>
     </tr>
     <tr>
         <td></td>
@@ -95,15 +94,15 @@
     </tr>
 
     <tr>
-        <td border="1"><?php if(is_isset_and_not_empty($_POST['maintenance']['off_site'])) echo "[*]" ?>Off-Site Disposal of grass clipping</td>
-        <td border="1"><?php if(is_isset_and_not_empty($_POST['maintenance']['off_site'])) echo $_POST['maintenance']['off_site'] ?></td>
+        <td border="1"><?php if(is_isset_and_not_empty($_POST['maintenance']['monthly'])) echo "[*]" ?>Monthly</td>
+        <td border="1"><?php if(is_isset_and_not_empty($_POST['maintenance']['monthly'])) echo $_POST['maintenance']['monthly'] ?></td>
         <td border="1"><?php if(is_isset_and_not_empty($_POST['spring_clean']['clean_up'])) echo "[*]" ?>Clean Up Turf/Bed Areas </td>
         <td border="1"><?php if(is_isset_and_not_empty($_POST['spring_clean']['clean_up'])) echo $_POST['spring_clean']['clean_up'] ?></td>
     </tr>
 
     <tr>
-        <td border="1"><?php if(is_isset_and_not_empty($_POST['maintenance']['monthly_cultivation'])) echo "[*]" ?>Monthly cultivation of bed area</td>
-        <td border="1"><?php if(is_isset_and_not_empty($_POST['maintenance']['monthly_cultivation'])) echo $_POST['maintenance']['monthly_cultivation'] ?></td>
+        <td></td>
+        <td></td>
         <td border="1"><?php if(is_isset_and_not_empty($_POST['spring_clean']['cutting_back'])) echo "[*]" ?>Cutting back of Perennials </td>
         <td border="1"><?php if(is_isset_and_not_empty($_POST['spring_clean']['cutting_back'])) echo $_POST['spring_clean']['clean_up'] ?></td>
     </tr>
@@ -130,8 +129,8 @@
 <table cellspacing="0" cellpadding="1" border="0" style="top:5px; margin-top: 10px; padding-top: 10px">
 
     <tr style="color: white; background-color: #000">
-        <th border="1" colspan="6">FERTILIZATION / WEED CONTROL PROGRAM</th>
-        <th border="1" colspan="2"></th>
+        <th border="1" colspan="3">FERTILIZATION / WEED CONTROL PROGRAM</th>
+        <th border="1" colspan="3">FALL CLEAN-UP</th>
     </tr>
 
     <tr style="color: white; background-color: #000">
@@ -148,7 +147,7 @@
         <td border="1"><?php if(is_isset_and_not_empty($_POST['fertilization'][0]['description'])) echo $_POST['fertilization'][0]['description']?></td>
         <td border="1"><?php if(is_isset_and_not_empty($_POST['fertilization'][0]['material'])) echo $_POST['fertilization'][0]['material']?></td>
         <td border="1"><?php if(is_isset_and_not_empty($_POST['fertilization'][0]['labor'])) echo $_POST['fertilization'][0]['labor'] ?></td>
-        <td border="1"><?php if(is_isset_and_not_empty($_POST['fertilization'][0]['project_amount'])) echo $_POST['fertilization'][0]['amount']?></td>
+        <td border="1"><?php if(is_isset_and_not_empty($_POST['fertilization'][0]['amount'])) echo $_POST['fertilization'][0]['amount']?></td>
 
         <td border="1"><?php if(is_isset_and_not_empty($_POST['fall_clean']['clean_up'])) echo "[*]" ?>Clean Up Turf/Bed Areas </td>
         <td border="1"><?php if(is_isset_and_not_empty($_POST['fall_clean']['clean_up'])) echo $_POST['fall_clean']['clean_up']?></td>
@@ -158,7 +157,7 @@
         <td border="1"><?php if(is_isset_and_not_empty($_POST['fertilization'][1]['description'])) echo $_POST['fertilization'][1]['description']?></td>
         <td border="1"><?php if(is_isset_and_not_empty($_POST['fertilization'][1]['material'])) echo $_POST['fertilization'][1]['material']?></td>
         <td border="1"><?php if(is_isset_and_not_empty($_POST['fertilization'][1]['labor'])) echo $_POST['fertilization'][1]['labor'] ?></td>
-        <td border="1"><?php if(is_isset_and_not_empty($_POST['fertilization'][1]['project_amount'])) echo $_POST['fertilization'][1]['amount']?></td>
+        <td border="1"><?php if(is_isset_and_not_empty($_POST['fertilization'][1]['amount'])) echo $_POST['fertilization'][1]['amount']?></td>
 
         <td border="1"><?php if(is_isset_and_not_empty($_POST['fall_clean']['cutting_back'])) echo "[*]" ?>Cutting back Perennials </td>
         <td border="1"><?php if(is_isset_and_not_empty($_POST['fall_clean']['cutting_back'])) echo $_POST['fall_clean']['cutting_back']?></td>
@@ -168,7 +167,7 @@
         <td border="1"><?php if(is_isset_and_not_empty($_POST['fertilization'][2]['description'])) echo $_POST['fertilization'][2]['description']?></td>
         <td border="1"><?php if(is_isset_and_not_empty($_POST['fertilization'][2]['material'])) echo $_POST['fertilization'][2]['material']?></td>
         <td border="1"><?php if(is_isset_and_not_empty($_POST['fertilization'][2]['labor'])) echo $_POST['fertilization'][2]['labor'] ?></td>
-        <td border="1"><?php if(is_isset_and_not_empty($_POST['fertilization'][2]['project_amount'])) echo $_POST['fertilization'][2]['amount']?></td>
+        <td border="1"><?php if(is_isset_and_not_empty($_POST['fertilization'][2]['amount'])) echo $_POST['fertilization'][2]['amount']?></td>
 
         <td border="1"><?php if(is_isset_and_not_empty($_POST['fall_clean']['pruning'])) echo "[*]" ?>Pruning (Trim & Shape) </td>
         <td border="1"><?php if(is_isset_and_not_empty($_POST['fall_clean']['pruning'])) echo $_POST['fall_clean']['pruning']?></td>
@@ -178,7 +177,7 @@
         <td border="1"><?php if(is_isset_and_not_empty($_POST['fertilization'][3]['description'])) echo $_POST['fertilization'][3]['description']?></td>
         <td border="1"><?php if(is_isset_and_not_empty($_POST['fertilization'][3]['material'])) echo $_POST['fertilization'][3]['material']?></td>
         <td border="1"><?php if(is_isset_and_not_empty($_POST['fertilization'][3]['labor'])) echo $_POST['fertilization'][3]['labor'] ?></td>
-        <td border="1"><?php if(is_isset_and_not_empty($_POST['fertilization'][3]['project_amount'])) echo $_POST['fertilization'][3]['amount']?></td>
+        <td border="1"><?php if(is_isset_and_not_empty($_POST['fertilization'][3]['amount'])) echo $_POST['fertilization'][3]['amount']?></td>
 
         <td border="1"><?php if(is_isset_and_not_empty($_POST['fall_clean']['aeration'])) echo "[*]" ?>Aeration </td>
         <td border="1"><?php if(is_isset_and_not_empty($_POST['fall_clean']['aeration'])) echo $_POST['fall_clean']['aeration']?></td>
@@ -188,7 +187,7 @@
         <td border="1"><?php if(is_isset_and_not_empty($_POST['fertilization'][4]['description'])) echo $_POST['fertilization'][4]['description']?></td>
         <td border="1"><?php if(is_isset_and_not_empty($_POST['fertilization'][4]['material'])) echo $_POST['fertilization'][4]['material']?></td>
         <td border="1"><?php if(is_isset_and_not_empty($_POST['fertilization'][4]['labor'])) echo $_POST['fertilization'][4]['labor'] ?></td>
-        <td border="1"><?php if(is_isset_and_not_empty($_POST['fertilization'][4]['project_amount'])) echo $_POST['fertilization'][4]['amount']?></td>
+        <td border="1"><?php if(is_isset_and_not_empty($_POST['fertilization'][4]['amount'])) echo $_POST['fertilization'][4]['amount']?></td>
 
         <td border="1"><?php if(is_isset_and_not_empty($_POST['fall_clean']['winter_protection'])) echo "[*]" ?>Winter Protection </td>
         <td border="1"><?php if(is_isset_and_not_empty($_POST['fall_clean']['winter_protection'])) echo $_POST['fall_clean']['winter_protection']?></td>
@@ -198,7 +197,7 @@
         <td border="1"><?php if(is_isset_and_not_empty($_POST['fertilization'][5]['description'])) echo $_POST['fertilization'][5]['description']?></td>
         <td border="1"><?php if(is_isset_and_not_empty($_POST['fertilization'][5]['material'])) echo $_POST['fertilization'][5]['material']?></td>
         <td border="1"><?php if(is_isset_and_not_empty($_POST['fertilization'][5]['labor'])) echo $_POST['fertilization'][5]['labor'] ?></td>
-        <td border="1"><?php if(is_isset_and_not_empty($_POST['fertilization'][5]['project_amount'])) echo $_POST['fertilization'][5]['amount']?></td>
+        <td border="1"><?php if(is_isset_and_not_empty($_POST['fertilization'][5]['amount'])) echo $_POST['fertilization'][5]['amount']?></td>
 
         <td border="1"><?php if(is_isset_and_not_empty($_POST['fall_clean']['transplanting'])) echo "[*]" ?>Transplanting </td>
         <td border="1"><?php if(is_isset_and_not_empty($_POST['fall_clean']['transplanting'])) echo $_POST['fall_clean']['transplanting']?></td>
@@ -208,7 +207,7 @@
         <td border="1"><?php if(is_isset_and_not_empty($_POST['fertilization'][6]['description'])) echo $_POST['fertilization'][6]['description']?></td>
         <td border="1"><?php if(is_isset_and_not_empty($_POST['fertilization'][6]['material'])) echo $_POST['fertilization'][6]['material']?></td>
         <td border="1"><?php if(is_isset_and_not_empty($_POST['fertilization'][6]['labor'])) echo $_POST['fertilization'][6]['labor'] ?></td>
-        <td border="1"><?php if(is_isset_and_not_empty($_POST['fertilization'][6]['project_amount'])) echo $_POST['fertilization'][6]['amount']?></td>
+        <td border="1"><?php if(is_isset_and_not_empty($_POST['fertilization'][6]['amount'])) echo $_POST['fertilization'][6]['amount']?></td>
 
         <td border="1"><?php if(is_isset_and_not_empty($_POST['fall_clean']['off_site'])) echo "[*]" ?>Off-Site Disposal of debris </td>
         <td border="1"><?php if(is_isset_and_not_empty($_POST['fall_clean']['off_site'])) echo $_POST['fall_clean']['off_site']?></td>
@@ -218,7 +217,7 @@
         <td border="1"><?php if(is_isset_and_not_empty($_POST['fertilization'][7]['description'])) echo $_POST['fertilization'][7]['description']?></td>
         <td border="1"><?php if(is_isset_and_not_empty($_POST['fertilization'][7]['material'])) echo $_POST['fertilization'][7]['material']?></td>
         <td border="1"><?php if(is_isset_and_not_empty($_POST['fertilization'][7]['labor'])) echo $_POST['fertilization'][7]['labor'] ?></td>
-        <td border="1"><?php if(is_isset_and_not_empty($_POST['fertilization'][7]['project_amount'])) echo $_POST['fertilization'][7]['amount']?></td>
+        <td border="1"><?php if(is_isset_and_not_empty($_POST['fertilization'][7]['amount'])) echo $_POST['fertilization'][7]['amount']?></td>
 
         <td border="1" colspan="2" rowspan="3">Start to: <?php if(is_isset_and_not_empty($_POST['fall_clean']['start_date'])) echo $_POST['fall_clean']['start_date'] ?>
             End to: <?php if(is_isset_and_not_empty($_POST['fall_clean']['end_date'])) echo $_POST['fall_clean']['end_date'] ?>
@@ -262,6 +261,12 @@
 
 <table cellspacing="0" cellpadding="1" border="0" style="top:5px; margin-top: 10px; padding-top: 10px">
     <tr style="color: white; background-color: #000">
+        <td border="1"></td>
+        <td border="1"></td>
+        <td border="1"></td>
+        <td colspan="3" style="text-align: center">OTHER PROJECTS</td>
+    </tr>
+    <tr style="color: white; background-color: #000">
         <th border="1" width="25%">REMOVAL/INSTALLATION</th>
         <th border="1" width="25%">CHARGE</th>
         <th border="1" width="26%">DESCRIPTION</th>
@@ -277,7 +282,7 @@
         <td border="1"><?php if(is_isset_and_not_empty($_POST['other_projects'][0]['description'])) echo $_POST['other_projects'][0]['description']?></td>
         <td border="1"><?php if(is_isset_and_not_empty($_POST['other_projects'][0]['material'])) echo $_POST['other_projects'][0]['material']?></td>
         <td border="1"><?php if(is_isset_and_not_empty($_POST['other_projects'][0]['labor'])) echo $_POST['other_projects'][0]['labor'] ?></td>
-        <td border="1"><?php if(is_isset_and_not_empty($_POST['other_projects'][0]['project_amount'])) echo $_POST['other_projects'][0]['amount']?></td>
+        <td border="1"><?php if(is_isset_and_not_empty($_POST['other_projects'][0]['amount'])) echo $_POST['other_projects'][0]['amount']?></td>
 
     </tr>
 
@@ -288,7 +293,7 @@
         <td border="1"><?php if(is_isset_and_not_empty($_POST['other_projects'][1]['description'])) echo $_POST['other_projects'][1]['description']?></td>
         <td border="1"><?php if(is_isset_and_not_empty($_POST['other_projects'][1]['material'])) echo $_POST['other_projects'][1]['material']?></td>
         <td border="1"><?php if(is_isset_and_not_empty($_POST['other_projects'][1]['labor'])) echo $_POST['other_projects'][1]['labor'] ?></td>
-        <td border="1"><?php if(is_isset_and_not_empty($_POST['other_projects'][1]['project_amount'])) echo $_POST['other_projects'][1]['amount']?></td>
+        <td border="1"><?php if(is_isset_and_not_empty($_POST['other_projects'][1]['amount'])) echo $_POST['other_projects'][1]['amount']?></td>
     </tr>
 
     <tr>
@@ -298,7 +303,7 @@
         <td border="1"><?php if(is_isset_and_not_empty($_POST['other_projects'][2]['description'])) echo $_POST['other_projects'][2]['description']?></td>
         <td border="1"><?php if(is_isset_and_not_empty($_POST['other_projects'][2]['material'])) echo $_POST['other_projects'][2]['material']?></td>
         <td border="1"><?php if(is_isset_and_not_empty($_POST['other_projects'][2]['labor'])) echo $_POST['other_projects'][2]['labor'] ?></td>
-        <td border="1"><?php if(is_isset_and_not_empty($_POST['other_projects'][2]['project_amount'])) echo $_POST['other_projects'][2]['amount']?></td>
+        <td border="1"><?php if(is_isset_and_not_empty($_POST['other_projects'][2]['amount'])) echo $_POST['other_projects'][2]['amount']?></td>
     </tr>
 
     <tr>
@@ -308,7 +313,7 @@
         <td border="1"><?php if(is_isset_and_not_empty($_POST['other_projects'][3]['description'])) echo $_POST['other_projects'][3]['description']?></td>
         <td border="1"><?php if(is_isset_and_not_empty($_POST['other_projects'][3]['material'])) echo $_POST['other_projects'][3]['material']?></td>
         <td border="1"><?php if(is_isset_and_not_empty($_POST['other_projects'][3]['labor'])) echo $_POST['other_projects'][3]['labor'] ?></td>
-        <td border="1"><?php if(is_isset_and_not_empty($_POST['other_projects'][3]['project_amount'])) echo $_POST['other_projects'][3]['amount']?></td>
+        <td border="1"><?php if(is_isset_and_not_empty($_POST['other_projects'][3]['amount'])) echo $_POST['other_projects'][3]['amount']?></td>
     </tr>
 
     <tr>
@@ -318,7 +323,7 @@
     </tr>
 
     <tr>
-        <td>
+        <td colspan="6">
             <?php if(is_isset_and_not_empty($_POST['projects']['polo_field'])) echo "<span>[*] Polo Field </span>"?>
             <?php if(is_isset_and_not_empty($_POST['projects']['top_dressing'])) echo "<span>[*] Top Dressing </span>" ?>
             <?php if(is_isset_and_not_empty($_POST['projects']['weeding'])) echo "<span>[*] Weeding </span>" ?>
@@ -342,32 +347,40 @@
     </tr>
 </table>
 
+<?php if(isset($_POST['order']['contract']) && $_POST['order']['contract'] != ''): ?>
+<table cellspacing="0" cellpadding="1" border="1" style="top:5px; margin-top: 10px; padding-top: 10px; font-size: 10px">
+    <tr>
+        <td><?php echo $_POST['order']['contract'] ?></td>
+    </tr>
+</table>
+<?php endif ?>
+
 <table cellspacing="0" cellpadding="1" border="1" style="top:5px; margin-top: 10px; padding-top: 10px; font-size: 10px">
     <tr>
         <td colspan="5" rowspan="5" style="text-align: center">
             <?php if(is_isset_and_not_empty($_POST['order']['signature'])): ?>
                 <img src="<?php echo generate_image_from_signature($_POST['order']['signature']) ?>" height="70">
             <?php endif ?>
-            <h4 style="margin: 0; padding: 0">Customer Signature</h4>
+            <h4 style="margin: 0; padding: 0"><?php if(get_option( 'order_signature_space' )) echo get_option( 'order_signature_space' ) ?></h4>
         </td>
         <td>TOTAL MATERIALS</td>
-        <td><?php echo number_format($totals['totalMaterial'], 2) ?></td>
+        <td>$ <?php echo number_format($totalMaterial, 2) ?></td>
     </tr>
     <tr>
         <td>TOTAL LABOR</td>
-        <td><?php echo number_format($totals['totalLabor'],2 )?></td>
+        <td>$ <?php echo number_format($totalLabor,2 )?></td>
     </tr>
     <tr>
         <td>TOTAL TAX</td>
-        <td><?php echo $totals['taxes'] ?></td>
+        <td>$ <?php echo $tax ?></td>
     </tr>
     <tr>
-        <td>DEPOSIT 50%</td>
-        <td><?php echo $totals['deposit'] ?></td>
+        <td>DEPOSIT <?php if(isset($_POST['order']['deposit'])) echo $_POST['order']['deposit'] ?>%</td>
+        <td>$ <?php echo $deposit ?></td>
     </tr>
     <tr>
         <td>BALANCE DUE</td>
-        <td><?php echo $totals['total'] ?> </td>
+        <td>$ <?php echo $balanceDue ?> </td>
     </tr>
 </table>
 </body>
